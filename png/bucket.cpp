@@ -4,7 +4,7 @@ using namespace std;
 
 #define BITS 5
 
-uint8_t num_buckets = 32, bucket_size = 256 / num_buckets;
+uint8_t num_buckets = 16, bucket_size = 256 / num_buckets;
 
 void write_encoded_image(vector<bitset<BITS>>& encoded_image, int width, int height, string filename) {
     ofstream outfile(filename, ios::out | ios::binary);
@@ -19,14 +19,31 @@ void write_encoded_image(vector<bitset<BITS>>& encoded_image, int width, int hei
     outfile.close();
 }
 
+vector<uint8_t> bucket_rgb(vector<uint8_t>& image, int width, int height, std::string filename) {
+    vector<uint8_t> encoded_image;
+    for(auto& pixel : image){
+        uint8_t bucket_idx = pixel / bucket_size;
+        encoded_image.push_back(bucket_idx);
+    }
+    return encoded_image;
+}
+
+vector<uint8_t> restore_bucket(vector<uint8_t>& encoded_image) {
+    vector<uint8_t> restored_image;
+    for(auto& bucket_idx : encoded_image) {
+        uint8_t intensity = bucket_idx * bucket_size;
+        restored_image.push_back(intensity);
+    }
+    return restored_image;
+}
+
 void bucket_encode(std::vector<uint8_t> image, int width, int height, std::string filename){
     vector<bitset<5>> encoded_image;
-
-    for(auto& pixel : image){
+    vector<uint8_t> bucketed_rgb = bucket_rgb(image, width, height, filename);
+    for(auto& pixel : bucketed_rgb){
         uint8_t bucket_idx = pixel / bucket_size;
         encoded_image.push_back(bitset<5>(bucket_idx));
     }
-
     write_encoded_image(encoded_image, width, height, filename);
 }
 
