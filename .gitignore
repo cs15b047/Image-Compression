@@ -1,2 +1,5 @@
 .vscode/
+image_data/
 .DS_Store
+*.bpg
+*.pdf

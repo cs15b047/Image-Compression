@@ -1,5 +1,4 @@
-#include "rle.h"
-#include <unordered_map>
+#include "mycodec.h"
 
 using namespace std;
 
@@ -17,7 +16,7 @@ void write_encoded_image(vector<pair<uint8_t, short int>>& encoded_image, int wi
     outfile.close();
 }
 
-void rle_encode(vector<uint8_t> image, int width, int height, string filename) {
+void rle_encode(vector<uint8_t>& image, int width, int height, string filename) {
     vector<pair<uint8_t, short int>> encoded_image;
     encoded_image.clear();
 
@@ -51,6 +50,7 @@ vector<uint8_t> rle_decode(string filename) {
 
     vector<uint8_t> image;
     image.clear();
+    int num_elements  = 0;
     
     while(!infile.eof()) {
         uint8_t intensity;
@@ -60,8 +60,9 @@ vector<uint8_t> rle_decode(string filename) {
         for(short int i = 0; i < count; i++) {
             image.push_back(intensity);
         }
+        num_elements++;
     }
-    cout << "Decoded " << image.size() << " elements" << endl;
+    cout << "Decoded " << num_elements << " elements" << endl;
     infile.close();
 
     return image;
