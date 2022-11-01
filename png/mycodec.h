@@ -19,6 +19,10 @@ std::vector<uint8_t> bucket_rgb(std::vector<uint8_t>& image, int width, int heig
 std::vector<uint8_t> restore_bucket(std::vector<uint8_t>& encoded_image);
 void bucket_encode(std::vector<uint8_t> image, int width, int height, std::string filename);
 std::vector<uint8_t> bucket_decode(std::string filename);
+// Bucket encoding for YCbCr
+std::vector<uint8_t> bucket_ycbcr(std::vector<uint8_t>& image, int width, int height);
+std::vector<uint8_t> restore_bucket_ycbcr(std::vector<uint8_t>& image);
+
 
 // Color transform: RGB to YCbCr
 std::vector<uint8_t> rgb2ycbcr(std::vector<uint8_t>& image);

@@ -2,9 +2,9 @@
 
 using namespace std;
 
-#define BITS 6
+#define BITS 7
 
-uint8_t num_buckets = 64, bucket_size = 256 / num_buckets;
+uint8_t num_buckets = 128, bucket_size = 256 / num_buckets;
 
 void write_encoded_image(vector<bitset<BITS>>& encoded_image, int width, int height, string filename) {
     ofstream outfile(filename, ios::out | ios::binary);
@@ -26,6 +26,33 @@ vector<uint8_t> bucket_rgb(vector<uint8_t>& image, int width, int height, std::s
         encoded_image.push_back(bucket_idx);
     }
     return encoded_image;
+}
+
+vector<uint8_t> bucket_ycbcr(vector<uint8_t>& image, int width, int height) {
+    vector<uint8_t> encoded_image;
+    // Y --> remains as is, Cb and Cr --> bucketed
+    for(int i = 0; i < image.size(); i++) {
+        if(i % 3 != 0) {
+            uint8_t bucket_idx = image[i] / bucket_size;
+            encoded_image.push_back(bucket_idx);
+        } else {
+            encoded_image.push_back(image[i]);
+        }
+    }
+    return encoded_image;
+}
+
+vector<uint8_t> restore_bucket_ycbcr(vector<uint8_t>& image) {
+    vector<uint8_t> restored_image;
+    // Y --> remains as is, Cb and Cr --> restored
+    for(int i = 0; i < image.size(); i++) {
+        uint8_t restored_pixel = image[i];
+        if(i % 3 != 0) {
+            restored_pixel = restored_pixel * bucket_size;
+        }
+        restored_image.push_back(restored_pixel);
+    }
+    return restored_image;
 }
 
 vector<uint8_t> restore_bucket(vector<uint8_t>& encoded_image) {
