@@ -19,12 +19,9 @@ int main(int argc, char* argv[]) {
     image.clear();
     copy_row_pointers_to_vector(image, row_pointers, width, height);
     string filename = compress_image(image, width, height);
-    
     image = decompress_image(filename);
     row_pointers = copy_vector_to_row_pointers(image, width, height);
-
     cout << "Image decompressed through custom codec. Writing to PNG file: " << argv[2] << endl;
-
     write_png_file(argv[2]);
 
     return 0;
