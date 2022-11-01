@@ -20,4 +20,8 @@ std::vector<uint8_t> restore_bucket(std::vector<uint8_t>& encoded_image);
 void bucket_encode(std::vector<uint8_t> image, int width, int height, std::string filename);
 std::vector<uint8_t> bucket_decode(std::string filename);
 
+// Color transform: RGB to YCbCr
+std::vector<uint8_t> rgb2ycbcr(std::vector<uint8_t>& image);
+std::vector<uint8_t> ycbcr2rgb(std::vector<uint8_t>& image);
+
 #endif // MYCODEC_H

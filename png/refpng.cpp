@@ -40,14 +40,14 @@ void read_png_file(char *filename) {
   if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
     png_set_expand_gray_1_2_4_to_8(png);
 
-  if(png_get_valid(png, info, PNG_INFO_tRNS))
-    png_set_tRNS_to_alpha(png);
+  // if(png_get_valid(png, info, PNG_INFO_tRNS))
+  //   png_set_tRNS_to_alpha(png);
 
   // These color_type don't have an alpha channel then fill it with 0xff.
-  if(color_type == PNG_COLOR_TYPE_RGB ||
-     color_type == PNG_COLOR_TYPE_GRAY ||
-     color_type == PNG_COLOR_TYPE_PALETTE)
-    png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
+  // if(color_type == PNG_COLOR_TYPE_RGB ||
+  //    color_type == PNG_COLOR_TYPE_GRAY ||
+  //    color_type == PNG_COLOR_TYPE_PALETTE)
+  //   png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
 
   if(color_type == PNG_COLOR_TYPE_GRAY ||
      color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
@@ -87,7 +87,7 @@ void write_png_file(char *filename) {
     info,
     width, height,
     8,
-    PNG_COLOR_TYPE_RGBA,
+    PNG_COLOR_TYPE_RGB,
     PNG_INTERLACE_NONE,
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT
@@ -115,7 +115,7 @@ void write_png_file(char *filename) {
 
 void copy_row_pointers_to_vector(vector<uint8_t>& image, png_bytep *row_pointers, int width, int height) {
     for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width * 4; x++) {
+        for(int x = 0; x < width * 3; x++) {
             image.push_back(row_pointers[y][x]);
         }
     }
@@ -124,7 +124,7 @@ void copy_row_pointers_to_vector(vector<uint8_t>& image, png_bytep *row_pointers
 png_bytep* allocate_image_memory(int width, int height) {
     png_bytep *row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
     for(int y = 0; y < height; y++) {
-        row_pointers[y] = (png_byte*)malloc(width * 4); // assuming 4 channels
+        row_pointers[y] = (png_byte*)malloc(width * 3); // assuming 3 channels
     }
     return row_pointers;
 }
@@ -133,7 +133,7 @@ png_bytep* copy_vector_to_row_pointers(vector<uint8_t>& image, int width, int he
     png_bytep* row_pointers = allocate_image_memory(width, height);
     int index = 0;
     for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width * 4; x++) {
+        for(int x = 0; x < width * 3; x++) {
             row_pointers[y][x] = image[index];
             index++;
         }

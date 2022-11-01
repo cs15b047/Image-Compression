@@ -2,9 +2,9 @@
 
 using namespace std;
 
-#define BITS 5
+#define BITS 6
 
-uint8_t num_buckets = 16, bucket_size = 256 / num_buckets;
+uint8_t num_buckets = 64, bucket_size = 256 / num_buckets;
 
 void write_encoded_image(vector<bitset<BITS>>& encoded_image, int width, int height, string filename) {
     ofstream outfile(filename, ios::out | ios::binary);
@@ -38,11 +38,11 @@ vector<uint8_t> restore_bucket(vector<uint8_t>& encoded_image) {
 }
 
 void bucket_encode(std::vector<uint8_t> image, int width, int height, std::string filename){
-    vector<bitset<5>> encoded_image;
+    vector<bitset<BITS>> encoded_image;
     vector<uint8_t> bucketed_rgb = bucket_rgb(image, width, height, filename);
     for(auto& pixel : bucketed_rgb){
         uint8_t bucket_idx = pixel / bucket_size;
-        encoded_image.push_back(bitset<5>(bucket_idx));
+        encoded_image.push_back(bitset<BITS>(bucket_idx));
     }
     write_encoded_image(encoded_image, width, height, filename);
 }
