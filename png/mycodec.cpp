@@ -17,10 +17,10 @@ string compress_image(vector<uint8_t>& image, int width, int height) {
     image = rgb2ycbcr(image);
     image = bucket_ycbcr(image, width, height);
     
-    // vector<double> dct = apply_dct(image, width, height);
-    // vector<uint8_t> reconstructed_image = apply_idct(dct, width, height);
-    // calculate_roundtrip_error(image, reconstructed_image, 3 * width * height);
-    // image = reconstructed_image;
+    vector<double> dct = apply_dct(image, width, height);
+    vector<uint8_t> reconstructed_image = apply_idct(dct, width, height);
+    calculate_roundtrip_error(image, reconstructed_image, 3 * width * height);
+    image = reconstructed_image;
     
     rle_encode(image, width, height, filename);
     compress(filename);

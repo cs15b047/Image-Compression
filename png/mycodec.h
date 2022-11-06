@@ -1,6 +1,7 @@
 #ifndef MYCODEC_H
 #define MYCODEC_H
 
+#include "utils.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -29,11 +30,8 @@ std::vector<uint8_t> restore_bucket_ycbcr(std::vector<uint8_t>& image);
 std::vector<uint8_t> rgb2ycbcr(std::vector<uint8_t>& image);
 std::vector<uint8_t> ycbcr2rgb(std::vector<uint8_t>& image);
 
-double clip(double pix);
-
 // DCT
 std::vector<double> apply_dct(std::vector<uint8_t>& image_, int width, int height);
 std::vector<uint8_t> apply_idct(std::vector<double>& image_, int width, int height);
-void calculate_roundtrip_error(std::vector<uint8_t>& image, std::vector<uint8_t>& image_restored, int image_size);
 
 #endif // MYCODEC_H

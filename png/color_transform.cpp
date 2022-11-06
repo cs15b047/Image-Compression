@@ -2,10 +2,6 @@
 
 using namespace std;
 
-double clip(double pix) {
-    return min(max(pix, 0.0), 255.0);
-}
-
 vector<uint8_t> rgb2ycbcr(vector<uint8_t>& image) {
     vector<uint8_t> ycbcr_image;
     double red_total = 0, green_total = 0, blue_total = 0;

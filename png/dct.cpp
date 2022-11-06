@@ -1,64 +1,16 @@
 #include "mycodec.h"
+#include "util.h"
+
 #include <vector>
 #include <iostream>
 #include <math.h>
 
 using namespace std;
 
-template <typename T>
-vector<vector<T>> separate_channels(vector<T>& image_, int image_size) {
-    vector<vector<T>> image(3, vector<T>(image_size));
-
-    cout << "image size: " << image_size << endl;
-    
-    for (int i = 0; i < image_size; i++) {
-        image[0][i] = image_[3 * i]; // isolate the 1st channel (Y in YCbCr)
-        image[1][i] = image_[3 * i + 1]; // isolate the 2nd channel (Cb in YCbCr)
-        image[2][i] = image_[3 * i + 2]; // isolate the 3rd channel (Cr in YCbCr)
-    }
-    return image;
-}
-
-template <typename T>
-vector<T> merge_channels(vector<vector<T>>& image, int image_size) {
-    vector<T> combined_image(3 * image_size);
-    for (int i = 0; i < image_size; i++) {
-        combined_image[3 * i] = image[0][i];
-        combined_image[3 * i + 1] = image[1][i];
-        combined_image[3 * i + 2] = image[2][i];
-    }
-    return combined_image;
-}
-
-void calc_histogram(vector<uint8_t>& image) {
-    vector<int> histogram(256, 0);
-    for(auto& pix: image) {
-        histogram[pix]++;
-    }
-    cout << "Histogram: " << endl;
-    for(int i = 0 ; i < 256; i++){
-        cout << histogram[i] << " ";
-    }
-    cout << endl;
-}
-
-void calculate_roundtrip_error(vector<uint8_t>& image, vector<uint8_t>& image_restored, int image_size) {
-    // Calc error
-    double total_error = 0.0, max_error = 0.0;
-    for(int i = 0; i < image_size; i++) {
-        double curr_error = fabs((int)image[i] - (int)image_restored[i]);
-        max_error = max(max_error, curr_error);
-        total_error += curr_error;
-    }
-
-    cout << "Error: " << total_error << endl;
-    cout << "Max error: " << max_error << endl;
-}
-
 vector<double> dct2D(vector<uint8_t>& image, int width, int height) {
     int image_size = width * height;
     vector<double> image_double(image_size, 0.0), image_dct(image_size, 0.0);
-    // 1. Normalize image to [0, 1]
+    // Convert to double
     for(int i = 0; i < image_size; i++) {
         image_double[i] = (double)image[i];
     }
@@ -78,7 +30,6 @@ vector<double> dct2D(vector<uint8_t>& image, int width, int height) {
 
     return image_dct;
 }
-
 
 vector<uint8_t> idct2D(vector<double>& image_dct, int width, int height) {
     int image_size = width * height;
@@ -104,7 +55,6 @@ vector<uint8_t> idct2D(vector<double>& image_dct, int width, int height) {
 }
 
 vector<double> apply_dct(vector<uint8_t>& image_, int width, int height) {
-    // take 1st 8x8 block of image
     int image_size = width * height;
     vector<vector<uint8_t>> image = separate_channels<uint8_t>(image_, image_size);
     
