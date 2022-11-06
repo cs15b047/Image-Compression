@@ -7,7 +7,53 @@
 
 using namespace std;
 
-int block_size = 8;
+int block_size;
+vector<double> quantization_table;
+
+void setup_dct_params() {
+    block_size = 8;
+    quantization_table.resize(block_size * block_size);
+    // vector<double> Q = {
+    //     16,11,10,16,24,40,51,61,
+    //     12,12,14,19,26,28,60,55,
+    //     14,13,16,24,40,57,69,56,
+    //     14,17,22,29,51,87,80,62,
+    //     18,22,37,56,68,109,103,77,
+    //     24,35,55,64,81,104,113,92,
+    //     49,64,78,87,103,121,120,101,
+    //     72,92,95,98,112,100,103,99
+    // };
+    vector<double> Q = {
+        16,11,10,16,24,40,51,61,
+        12,12,14,19,26,28,60,55,
+        14,13,16,24,40,57,69,56,
+        14,17,22,29,51,87,80,62,
+        18,22,37,56,68,109,103,77,
+        24,35,55,64,81,104,113,92,
+        49,64,78,87,103,121,120,101,
+        72,92,95,98,112,100,103,99
+    };
+
+    quantization_table = Q;
+}
+
+vector<double> quantize(vector<double>& block) {
+    vector<double> quantized_block;
+    quantized_block.resize(block_size * block_size);
+    for(int i = 0; i < block_size * block_size; i++) {
+        quantized_block[i] = quantization_table[i] * round(block[i] / quantization_table[i]);
+    }
+    return quantized_block;
+}
+
+vector<double> reverse_quantize(vector<double>& block) {
+    vector<double> quantized_block;
+    quantized_block.resize(block_size * block_size);
+    for(int i = 0; i < block_size * block_size; i++) {
+        quantized_block[i] = block[i] * quantization_table[i];
+    }
+    return quantized_block;
+}
 
 vector<double> dct2D(vector<uint8_t>& image, int width, int height) {
     int image_size = width * height;
@@ -25,11 +71,6 @@ vector<double> dct2D(vector<uint8_t>& image, int width, int height) {
         image_dct[i] /= (2 * image_size);
     }
 
-    // auto min_it = min_element(image_dct.begin(), image_dct.end());
-    // cout << "min DCT: " << *min_it << endl;
-    // auto max_it = max_element(image_dct.begin(), image_dct.end());
-    // cout << "max DCT: " << *max_it << endl;
-
     return image_dct;
 }
 
@@ -42,11 +83,6 @@ vector<uint8_t> idct2D(vector<double>& image_dct, int width, int height) {
     fftw_plan idct2d = fftw_plan_r2r_1d(width * height, image_dct.data(), image_restored.data(), FFTW_REDFT01, FFTW_ESTIMATE);
     fftw_execute(idct2d);
 
-    // auto min_it = min_element(image_restored.begin(), image_restored.end());
-    // cout << "min IDCT: " << *min_it << endl;
-    // auto max_it = max_element(image_restored.begin(), image_restored.end());
-    // cout << "max IDCT: " << *max_it << endl;
-
     // 4. Convert back to uint8_t
     for(int i = 0; i < image_size; i++) {
         double pix = clip(image_restored[i]);
@@ -57,6 +93,7 @@ vector<uint8_t> idct2D(vector<double>& image_dct, int width, int height) {
 }
 
 vector<double> apply_dct(vector<uint8_t>& image_, int width, int height) {
+    setup_dct_params();
     int image_size = width * height;
     vector<vector<uint8_t>> image = separate_channels<uint8_t>(image_, image_size);
     
@@ -79,6 +116,9 @@ vector<double> apply_dct(vector<uint8_t>& image_, int width, int height) {
 
                 // Compute DCT of block
                 vector<double> block_dct = dct2D(block, block_size, block_size);
+
+                // Quantize DCT
+                block_dct = quantize(block_dct);
                 
                 // Copy DCT back to appropriate block
                 for(int k = 0; k < block_size; k++) {
@@ -97,6 +137,7 @@ vector<double> apply_dct(vector<uint8_t>& image_, int width, int height) {
 }
 
 vector<uint8_t> apply_idct(vector<double>& image_, int width, int height) {
+    setup_dct_params();
     int image_size = width * height;
     vector<vector<double>> image = separate_channels<double>(image_, image_size);
     vector<uint8_t> image_restored(3 * image_size, 0);
