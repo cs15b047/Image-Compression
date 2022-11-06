@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <sstream>
 #include "refpng.h"
 #include "mycodec.h"
 
@@ -15,11 +16,16 @@ int main(int argc, char* argv[]) {
 
     read_png_file(argv[1]);
 
+    stringstream ss(argv[1]);
+    string folder, filename;
+    getline(ss, folder, '/');
+    getline(ss, filename, '.');
+
     vector<uint8_t> image;
     image.clear();
     copy_row_pointers_to_vector(image, row_pointers, width, height);
-    string filename = compress_image(image, width, height);
-    image = decompress_image(filename);
+    string compressed_filepath = compress_image(image, width, height, filename);
+    image = decompress_image(compressed_filepath);
     row_pointers = copy_vector_to_row_pointers(image, width, height);
     cout << "Image decompressed through custom codec. Writing to PNG file: " << argv[2] << endl;
     write_png_file(argv[2]);

@@ -13,4 +13,10 @@ std::vector<std::vector<T> > separate_channels(std::vector<T>& image_, int image
 
 double clip(double pix);
 
+std::pair<int, int> read_img_size(std::vector<char> buffer);
+template <typename T>
+std::vector<T> read_vec_from_buffer(std::vector<char> buffer);
+template <typename T>
+std::vector<char> write_vec_to_buffer(std::vector<T>& encoded_image, int width, int height, std::string filename);
+
 #endif // UTILS_H

@@ -4,4 +4,6 @@
 *.bin
 *.o
 kodak/
+reconstructed/
+compressed/
 mycodec

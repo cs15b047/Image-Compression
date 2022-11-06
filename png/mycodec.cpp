@@ -12,26 +12,34 @@ Ideas:
 5. WIP: DCT
 */ 
 
-string compress_image(vector<uint8_t>& image, int width, int height) {
-    string filename = "compressed_image.bin";
+string compress_image(vector<uint8_t>& image, int width, int height, string filename) {
+    string filepath = "compressed/" + filename + ".bin";
     image = rgb2ycbcr(image);
     image = bucket_ycbcr(image, width, height);
     
     vector<double> dct = apply_dct(image, width, height);
-    vector<uint8_t> reconstructed_image = apply_idct(dct, width, height);
-    calculate_roundtrip_error(image, reconstructed_image, 3 * width * height);
-    image = reconstructed_image;
     
-    rle_encode(image, width, height, filename);
-    compress(filename);
-    return filename;
+    // auto encoded_image = rle_encode(image);
+    vector<char> buffer = write_vec_to_buffer(dct, width, height, filename);
+    compress(buffer, filepath);
+    return filepath;
 }
 
 vector<uint8_t> decompress_image(string filename) {
-    decompress(filename);
-    vector<uint8_t> decompressed_image;
-    decompressed_image = rle_decode(filename);
-    decompressed_image = restore_bucket_ycbcr(decompressed_image);
-    decompressed_image = ycbcr2rgb(decompressed_image);
-    return decompressed_image;
+    vector<char> img_buffer = decompress1(filename);
+    pair<int, int> img_size = read_img_size(img_buffer);
+    int width = img_size.first, height = img_size.second;
+    
+    // for decoding RLE:
+    // vector<std::pair<uint8_t, short int>> encoded_image = read_vec_from_buffer<std::pair<uint8_t, short int>>(img_buffer);
+    // vector<uint8_t> decompressed_image = rle_decode(encoded_image);
+
+    // for decoding DCT:
+    vector<double> dct = read_vec_from_buffer<double>(img_buffer);
+
+    vector<uint8_t> decoded_image = apply_idct(dct, width, height);
+    
+    decoded_image = restore_bucket_ycbcr(decoded_image);
+    decoded_image = ycbcr2rgb(decoded_image);
+    return decoded_image;
 }
