@@ -18,6 +18,7 @@ string compress_image(vector<uint8_t>& image, int width, int height, string file
     image = bucket_ycbcr(image, width, height);
     
     vector<double> dct = apply_dct(image, width, height);
+    dct = delta_encode(dct);
     
     // auto encoded_image = rle_encode(image);
     vector<char> buffer = write_vec_to_buffer(dct, width, height, filename);
@@ -36,6 +37,7 @@ vector<uint8_t> decompress_image(string filename) {
 
     // for decoding DCT:
     vector<double> dct = read_vec_from_buffer<double>(img_buffer);
+    dct = delta_decode(dct);
 
     vector<uint8_t> decoded_image = apply_idct(dct, width, height);
     

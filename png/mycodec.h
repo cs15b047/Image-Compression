@@ -16,6 +16,12 @@ std::vector<std::pair<uint8_t, short int>> rle_encode(std::vector<uint8_t>& imag
 std::vector<uint8_t> rle_decode(std::vector<std::pair<uint8_t, short int>>& encoded_image);
 void write_encoded_image(std::vector<std::pair<uint8_t, short int>>& encoded_image, int width, int height, std::string filename);
 
+// Delta encoding
+template <typename T>
+std::vector<T> delta_encode(std::vector<T>& image);
+template <typename T>
+std::vector<T> delta_decode(std::vector<T>& encoded_image);
+
 // Bucket encoding : Bucket intensities and replace intensities with bucket indices
 std::vector<uint8_t> bucket_rgb(std::vector<uint8_t>& image, int width, int height, std::string filename);
 std::vector<uint8_t> restore_bucket(std::vector<uint8_t>& encoded_image);

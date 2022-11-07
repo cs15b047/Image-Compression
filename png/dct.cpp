@@ -118,7 +118,7 @@ vector<double> apply_dct(vector<uint8_t>& image_, int width, int height) {
                 vector<double> block_dct = dct2D(block, block_size, block_size);
 
                 // Quantize DCT
-                block_dct = quantize(block_dct);
+                // block_dct = quantize(block_dct);
                 
                 // Copy DCT back to appropriate block
                 for(int k = 0; k < block_size; k++) {
