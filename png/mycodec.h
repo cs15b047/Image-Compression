@@ -12,8 +12,10 @@ std::string compress_image(std::vector<uint8_t>& image, int width, int height, s
 std::vector<uint8_t> decompress_image(std::string filename);
 
 // RLE encoding
-std::vector<std::pair<uint8_t, short int>> rle_encode(std::vector<uint8_t>& image);
-std::vector<uint8_t> rle_decode(std::vector<std::pair<uint8_t, short int>>& encoded_image);
+template <typename T>
+std::vector<std::pair<T, short int>> rle_encode(std::vector<T>& image);
+template <typename T>
+std::vector<T> rle_decode(std::vector<std::pair<T, short int>>& encoded_image);
 void write_encoded_image(std::vector<std::pair<uint8_t, short int>>& encoded_image, int width, int height, std::string filename);
 
 // Delta encoding

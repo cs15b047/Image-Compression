@@ -16,8 +16,9 @@ void write_encoded_image(vector<pair<uint8_t, short int>>& encoded_image, int wi
     outfile.close();
 }
 
-vector<pair<uint8_t, short int>> rle_encode(vector<uint8_t>& image) {
-    vector<pair<uint8_t, short int>> encoded_image;
+template <typename T>
+vector<pair<T, short int>> rle_encode(vector<T>& image) {
+    vector<pair<T, short int>> encoded_image;
     encoded_image.clear();
 
     cout << "Encoding image with " << image.size() << " pixels" << endl;
@@ -38,9 +39,9 @@ vector<pair<uint8_t, short int>> rle_encode(vector<uint8_t>& image) {
     return encoded_image;  
 }
 
-
-vector<uint8_t> rle_decode(vector<pair<uint8_t, short int>>& encoded_image) {
-    vector<uint8_t> image;
+template <typename T>
+vector<T> rle_decode(vector<pair<T, short int>>& encoded_image) {
+    vector<T> image;
     image.clear();
     int num_elements  = 0;
     
@@ -56,3 +57,9 @@ vector<uint8_t> rle_decode(vector<pair<uint8_t, short int>>& encoded_image) {
 
     return image;
 }
+
+template vector<pair<uint8_t, short int>> rle_encode(vector<uint8_t>& image);
+template vector<pair<short int, short int>> rle_encode(vector<short int>& image);
+
+template vector<uint8_t> rle_decode(vector<pair<uint8_t, short int>>& encoded_image);
+template vector<short int> rle_decode(vector<pair<short int, short int>>& encoded_image);
