@@ -34,6 +34,9 @@ void compress(vector<char> buffer, string filename) {
     gzFile outfile = gzopen(outfilename, "wb");
     gzwrite(outfile, buffer.data(), size);
     gzclose(outfile);
+
+    cout << "Input data size to compression: " << (size/1024) << " KB" << endl;
+    cout << "Compressed file size: " << (file_size(outfilename) / 1024) << " KB" << endl;
 }
 
 vector<char> decompress1(string filename) {

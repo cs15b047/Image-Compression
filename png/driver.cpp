@@ -5,6 +5,7 @@
 #include <sstream>
 #include "refpng.h"
 #include "mycodec.h"
+#include "compress.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ int main(int argc, char* argv[]) {
     }
 
     read_png_file(argv[1]);
+
+    cout << "Original file size: " << (file_size(argv[1]) / 1024) << " KB" << endl;
 
     stringstream ss(argv[1]);
     string folder, filename;

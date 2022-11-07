@@ -14,34 +14,24 @@ Ideas:
 
 string compress_image(vector<uint8_t>& image, int width, int height, string filename) {
     string filepath = "compressed/" + filename + ".bin";
+    // Combination 1: Bucketing + Delta + ZLib
+    image = bucket_rgb(image, width, height, filename);
     image = rgb2ycbcr(image);
-    image = bucket_ycbcr(image, width, height);
+    image = delta_encode<uint8_t>(image);
     
-    vector<double> dct = apply_dct(image, width, height);
-    dct = delta_encode(dct);
-    
-    // auto encoded_image = rle_encode(image);
-    vector<char> buffer = write_vec_to_buffer(dct, width, height, filename);
+    vector<char> buffer = write_vec_to_buffer<uint8_t>(image, width, height, filepath);
     compress(buffer, filepath);
+
     return filepath;
 }
 
 vector<uint8_t> decompress_image(string filename) {
-    vector<char> img_buffer = decompress1(filename);
-    pair<int, int> img_size = read_img_size(img_buffer);
-    int width = img_size.first, height = img_size.second;
+    vector<char> buffer = decompress1(filename);
+    vector<uint8_t> image = read_vec_from_buffer<uint8_t>(buffer);
     
-    // for decoding RLE:
-    // vector<std::pair<uint8_t, short int>> encoded_image = read_vec_from_buffer<std::pair<uint8_t, short int>>(img_buffer);
-    // vector<uint8_t> decompressed_image = rle_decode(encoded_image);
-
-    // for decoding DCT:
-    vector<double> dct = read_vec_from_buffer<double>(img_buffer);
-    dct = delta_decode(dct);
-
-    vector<uint8_t> decoded_image = apply_idct(dct, width, height);
+    image = delta_decode<uint8_t>(image);
+    image = ycbcr2rgb(image);
+    image = restore_bucket(image);
     
-    decoded_image = restore_bucket_ycbcr(decoded_image);
-    decoded_image = ycbcr2rgb(decoded_image);
-    return decoded_image;
+    return image;
 }
