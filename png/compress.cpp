@@ -1,5 +1,5 @@
 #include "compress.h"
-
+#include <vector>
 using namespace std;
 
 unsigned long file_size(char* filename) {
@@ -25,6 +25,34 @@ void decompress(string filename) {
 
     gzclose(infile);
     fclose(outfile);
+}
+
+void compress(vector<char> buffer, string filename) {
+    int size = buffer.size();
+    string compressed_filename = filename + ".z";
+    char* outfilename = (char*)(compressed_filename).c_str();
+    gzFile outfile = gzopen(outfilename, "wb");
+    gzwrite(outfile, buffer.data(), size);
+    gzclose(outfile);
+}
+
+vector<char> decompress1(string filename) {
+    string compressed_filename = filename + ".z";
+    char* infilename = (char*)(compressed_filename).c_str();
+    gzFile infile = gzopen(infilename, "rb");
+
+    int chunk_size = 5000000;
+    char* tmp_buffer = (char*)malloc(chunk_size);
+    int num_read = 0;
+    vector<char> buffer;
+    while ((num_read = gzread(infile, tmp_buffer, chunk_size)) > 0) {
+        buffer.insert(buffer.end(), tmp_buffer, tmp_buffer + num_read);
+    }
+    
+    gzclose(infile);
+    free(tmp_buffer);
+
+    return buffer;
 }
 
 void compress(string filename) {

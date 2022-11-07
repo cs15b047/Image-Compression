@@ -2,5 +2,8 @@
 *.jpeg
 *.z
 *.bin
+*.o
 kodak/
+reconstructed/
+compressed/
 mycodec

@@ -16,7 +16,7 @@ void write_encoded_image(vector<pair<uint8_t, short int>>& encoded_image, int wi
     outfile.close();
 }
 
-void rle_encode(vector<uint8_t>& image, int width, int height, string filename) {
+vector<pair<uint8_t, short int>> rle_encode(vector<uint8_t>& image) {
     vector<pair<uint8_t, short int>> encoded_image;
     encoded_image.clear();
 
@@ -35,35 +35,24 @@ void rle_encode(vector<uint8_t>& image, int width, int height, string filename) 
 
     cout << "Encoded image elements: " << encoded_image.size() << ", Estimated size: " << ( (sizeof(short int) + sizeof(uint8_t)) * encoded_image.size() ) << " bytes" << endl;
 
-    write_encoded_image(encoded_image, width, height, filename);   
+    return encoded_image;  
 }
 
 
-vector<uint8_t> rle_decode(string filename) {
-    ifstream infile(filename, ios::in | ios::binary);
-    int width, height;
-
-    infile.read((char*)&width, sizeof(int));
-    infile.read((char*)&height, sizeof(int));
-
-    cout << "Decoding file...: Width: " << width << ", Height: " << height << endl;
-
+vector<uint8_t> rle_decode(vector<pair<uint8_t, short int>>& encoded_image) {
     vector<uint8_t> image;
     image.clear();
     int num_elements  = 0;
     
-    while(!infile.eof()) {
-        uint8_t intensity;
-        short int count;
-        infile.read((char*)&intensity, sizeof(uint8_t));
-        infile.read((char*)&count, sizeof(short int));
+    for(auto element : encoded_image) {
+        uint8_t intensity = element.first;
+        short int count = element.second;
         for(short int i = 0; i < count; i++) {
             image.push_back(intensity);
         }
         num_elements++;
     }
     cout << "Decoded " << num_elements << " elements" << endl;
-    infile.close();
 
     return image;
 }
