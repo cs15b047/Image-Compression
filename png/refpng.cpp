@@ -7,7 +7,7 @@ png_bytep *row_pointers = NULL;
 
 using namespace std;
 
-void read_png_file(char *filename) {
+void read_png_file(const char *filename) {
   FILE *fp = fopen(filename, "rb");
 
   png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -67,7 +67,7 @@ void read_png_file(char *filename) {
   png_destroy_read_struct(&png, &info, NULL);
 }
 
-void write_png_file(char *filename) {
+void write_png_file(const char *filename) {
   int y;
   FILE *fp = fopen(filename, "wb");
   if(!fp) abort();

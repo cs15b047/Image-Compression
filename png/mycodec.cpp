@@ -17,6 +17,7 @@ string compress_image(vector<uint8_t>& image, int width, int height, string file
     // Combination 1: Bucketing + Delta + ZLib
     image = bucket_rgb(image, width, height, filename);
     image = rgb2ycbcr(image);
+    image = bucket_ycbcr(image, width, height);
     image = delta_encode<uint8_t>(image);
     
     vector<char> buffer = write_vec_to_buffer<uint8_t>(image, width, height, filepath);
@@ -30,6 +31,7 @@ vector<uint8_t> decompress_image(string filename) {
     vector<uint8_t> image = read_vec_from_buffer<uint8_t>(buffer);
     
     image = delta_decode<uint8_t>(image);
+    image = restore_bucket_ycbcr(image);
     image = ycbcr2rgb(image);
     image = restore_bucket(image);
     

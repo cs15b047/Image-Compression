@@ -11,7 +11,9 @@ template <typename T>
 vector<vector<T>> separate_channels(vector<T>& image_, int image_size) {
     vector<vector<T>> image(3, vector<T>(image_size));
 
+    #ifdef debug
     cout << "image size: " << image_size << endl;
+    #endif
     
     for (int i = 0; i < image_size; i++) {
         image[0][i] = image_[3 * i]; // isolate the 1st channel (Y in YCbCr)
@@ -66,15 +68,18 @@ vector<char> write_vec_to_buffer(vector<T>& encoded_image, int width, int height
     int image_size = encoded_image.size();
     vector<char> buffer(3 * sizeof(int) + image_size * sizeof(T));
 
+    #ifdef debug
     cout << "Writing " << image_size << " elements of size " << sizeof(T) << " to buffer" << endl;
-    
     cout << "Writing encoded image to buffer: width: " << width << " and height: " << height << endl;
+    #endif
     memcpy(buffer.data(), &image_size, sizeof(int));
     memcpy(buffer.data() + sizeof(int), &width, sizeof(int));
     memcpy(buffer.data() + 2 * sizeof(int), &height, sizeof(int));
     memcpy(buffer.data() + 3 * sizeof(int), encoded_image.data(), image_size * sizeof(T));
 
+    #ifdef debug
     cout << "Buffer size: " << buffer.size() << endl;
+    #endif
     assert(buffer.size() == image_size * sizeof(T) + 3 * sizeof(int));
     
     return buffer;
@@ -87,14 +92,18 @@ vector<T> read_vec_from_buffer(vector<char> buffer) {
     memcpy(&width, buffer.data() + sizeof(int), sizeof(int));
     memcpy(&height, buffer.data() + 2 * sizeof(int), sizeof(int));
 
+    #ifdef debug
     cout << "Reading encoded image from buffer: width: " << width << " and height: " << height << ", number of elements: " << num_elements << endl;
+    #endif
 
     assert(buffer.size() == 3 * sizeof(int) + num_elements * sizeof(T));
     vector<T> encoded_image(num_elements);
     
     memcpy(encoded_image.data(), buffer.data() + 3 * sizeof(int), num_elements * sizeof(T));
 
+    #ifdef debug
     cout << "Encoded image size: " << encoded_image.size() << endl;
+    #endif
     
     return encoded_image;
 }
