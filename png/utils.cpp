@@ -122,18 +122,24 @@ template vector<int> merge_channels(vector<vector<int>>& image, int image_size);
 template vector<short> merge_channels(vector<vector<short>>& image, int image_size);
 template vector<uint8_t> merge_channels<uint8_t>(vector<vector<uint8_t>>& image, int image_size); 
 template vector<double> merge_channels<double>(vector<vector<double>>& image, int image_size);
+template vector<float> merge_channels<float>(vector<vector<float>>& image, int image_size);
 
 template vector<vector<int>> separate_channels(vector<int>& image_, int image_size);
 template vector<vector<short>> separate_channels<short>(vector<short>& image_, int image_size);
 template vector<vector<uint8_t>> separate_channels<uint8_t>(vector<uint8_t>& image_, int image_size);
 template vector<vector<double>> separate_channels<double>(vector<double>& image_, int image_size);
+template vector<vector<float>> separate_channels<float>(vector<float>& image_, int image_size);
 
 template vector<char> write_vec_to_buffer<uint8_t>(vector<uint8_t>& encoded_image, int width, int height, string filename);
 template vector<char> write_vec_to_buffer<double>(vector<double>& encoded_image, int width, int height, string filename);
+template vector<char> write_vec_to_buffer<float>(vector<float>& encoded_image, int width, int height, string filename);
+template vector<char> write_vec_to_buffer<short>(vector<short>& encoded_image, int width, int height, string filename);
 template vector<char> write_vec_to_buffer<pair<uint8_t, short int>>(vector<pair<uint8_t, short int>>& encoded_image, int width, int height, string filename);
 template vector<char> write_vec_to_buffer<pair<short int, short int>>(vector<pair<short int, short int>>& encoded_image, int width, int height, string filename);
 
 template vector<uint8_t> read_vec_from_buffer(vector<char> buffer);
+template vector<short> read_vec_from_buffer(vector<char> buffer);
 template vector<double> read_vec_from_buffer(vector<char> buffer);
+template vector<float> read_vec_from_buffer(vector<char> buffer);
 template vector<pair<uint8_t, short int>> read_vec_from_buffer(vector<char> buffer);
 template vector<pair<short int, short int>> read_vec_from_buffer(vector<char> buffer);

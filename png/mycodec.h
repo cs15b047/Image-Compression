@@ -39,7 +39,7 @@ std::vector<uint8_t> rgb2ycbcr(std::vector<uint8_t>& image);
 std::vector<uint8_t> ycbcr2rgb(std::vector<uint8_t>& image);
 
 // DCT
-std::vector<double> apply_dct(std::vector<uint8_t>& image_, int width, int height);
-std::vector<uint8_t> apply_idct(std::vector<double>& image_, int width, int height);
+std::vector<float> apply_dct(std::vector<uint8_t>& image_, int width, int height);
+std::vector<uint8_t> apply_idct(std::vector<float>& image_, int width, int height);
 
 #endif // MYCODEC_H
