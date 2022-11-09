@@ -42,8 +42,10 @@ template vector<uint8_t> delta_encode(vector<uint8_t>& image);
 template vector<short> delta_encode(vector<short>& image);
 template vector<int> delta_encode(vector<int>& image);
 template vector<double> delta_encode(vector<double>& image);
+template vector<float> delta_encode(vector<float>& image);
 
 template vector<uint8_t> delta_decode(vector<uint8_t>& encoded_image);
 template vector<short> delta_decode(vector<short>& image);
 template vector<int> delta_decode(vector<int>& encoded_image);
 template vector<double> delta_decode(vector<double>& encoded_image);
+template vector<float> delta_decode(vector<float>& encoded_image);

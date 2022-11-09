@@ -15,12 +15,14 @@ Ideas:
 string compress_image(vector<uint8_t>& image, int width, int height, string filename) {
     string filepath = "compressed/" + filename + ".bin";
     // Combination 1: Bucketing + Delta + ZLib
-    image = bucket_rgb(image, width, height, filename);
+    // image = bucket_rgb(image, width, height, filename);
     image = rgb2ycbcr(image);
     image = bucket_ycbcr(image, width, height);
-    image = delta_encode<uint8_t>(image);
+    vector<float> dct = apply_dct(image, width, height);
+    vector<short> dct_coeffs = vector<short>(dct.begin(), dct.end());
+    // dct_coeffs = delta_encode<short>(dct_coeffs);
     
-    vector<char> buffer = write_vec_to_buffer<uint8_t>(image, width, height, filepath);
+    vector<char> buffer = write_vec_to_buffer<short>(dct_coeffs, width, height, filepath);
     compress(buffer, filepath);
 
     return filepath;
@@ -28,12 +30,17 @@ string compress_image(vector<uint8_t>& image, int width, int height, string file
 
 vector<uint8_t> decompress_image(string filename) {
     vector<char> buffer = decompress1(filename);
-    vector<uint8_t> image = read_vec_from_buffer<uint8_t>(buffer);
+    pair<int, int> dimensions = read_img_size(buffer);
+    vector<short> dct = read_vec_from_buffer<short>(buffer);
     
-    image = delta_decode<uint8_t>(image);
+    int width = dimensions.first, height = dimensions.second;
+    
+    // dct = delta_decode<short>(dct);
+    vector<float> dct_float = vector<float>(dct.begin(), dct.end());
+    vector<uint8_t> image = apply_idct(dct_float, width, height);
     image = restore_bucket_ycbcr(image);
     image = ycbcr2rgb(image);
-    image = restore_bucket(image);
+    // image = restore_bucket(image);
     
     return image;
 }
