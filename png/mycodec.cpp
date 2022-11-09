@@ -9,18 +9,18 @@ Ideas:
 2. RGB to YCbCr conversion
 3. Bucketing CbCr values into 128 buckets and representing each intensity in 7 bits using bitsets --> lossy
 4. ZLib compression
-5. WIP: DCT
+5. DCT + Quantization
 */ 
+
+// Combination 1: Bucketing + Delta + ZLib (RLE worsens compression)
+// Combination 2: YCbCr + DCT + Quantization + ZLib (Delta worsens compression)
 
 string compress_image(vector<uint8_t>& image, int width, int height, string filename) {
     string filepath = "compressed/" + filename + ".bin";
-    // Combination 1: Bucketing + Delta + ZLib
-    // image = bucket_rgb(image, width, height, filename);
     image = rgb2ycbcr(image);
     image = bucket_ycbcr(image, width, height);
     vector<float> dct = apply_dct(image, width, height);
     vector<short> dct_coeffs = vector<short>(dct.begin(), dct.end());
-    // dct_coeffs = delta_encode<short>(dct_coeffs);
     
     vector<char> buffer = write_vec_to_buffer<short>(dct_coeffs, width, height, filepath);
     compress(buffer, filepath);
@@ -35,12 +35,10 @@ vector<uint8_t> decompress_image(string filename) {
     
     int width = dimensions.first, height = dimensions.second;
     
-    // dct = delta_decode<short>(dct);
     vector<float> dct_float = vector<float>(dct.begin(), dct.end());
     vector<uint8_t> image = apply_idct(dct_float, width, height);
     image = restore_bucket_ycbcr(image);
     image = ycbcr2rgb(image);
-    // image = restore_bucket(image);
     
     return image;
 }
