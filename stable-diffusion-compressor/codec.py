@@ -1,11 +1,6 @@
-# cell 1
-curr_dir = '/Users/ajayshridharjoshi/Documents/CS639/Image-Compression/stable-diffusion-compressor'
-input_folder = curr_dir + '/compression_test/input/'
-output_folder = curr_dir + '/compression_test/output/'
 huggingface_token = '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'
 pretrained_model_name_or_path = "CompVis/stable-diffusion-v1-4"
 
-# cell 3
 from huggingface_hub import notebook_login
 
 from diffusers import AutoencoderKL, UNet2DConditionModel, UNet2DModel, StableDiffusionImg2ImgPipeline
@@ -38,7 +33,7 @@ tokenizer = CLIPTokenizer.from_pretrained(
     pretrained_model_name_or_path,
     subfolder="tokenizer",
     use_auth_token=True,
-    #revision=pretrained_model_revision, torch_dtype=torch.float16
+    torch_dtype=torch.float16
 )
 
 uncond_input = tokenizer([""], padding="max_length", max_length=tokenizer.model_max_length, return_tensors="pt")
