@@ -15,8 +15,7 @@ Ideas:
 // Combination 1: Bucketing + Delta + ZLib (RLE worsens compression)
 // Combination 2: YCbCr + DCT + Quantization + ZLib (Delta worsens compression)
 
-string compress_image(vector<uint8_t>& image, int width, int height, string filename) {
-    string filepath = "compressed/" + filename + ".bin";
+string compress_image(vector<uint8_t>& image, int width, int height, string filepath) {
     image = rgb2ycbcr(image);
     image = bucket_ycbcr(image, width, height);
     vector<float> dct = apply_dct(image, width, height);

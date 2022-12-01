@@ -2,6 +2,8 @@ sudo apt update
 sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt install python3.9
+sudo apt install libfftw3-dev
+sudo apt install libpng-dev
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 sudo apt install python3-pip python3.9-distutils
 pip3 install diffusers accelerate libimagequant mozjpeg-lossless-optimization scikit-image tqdm tensorflow-compression huggingface-hub Pillow transformers ftfy -t /mnt/

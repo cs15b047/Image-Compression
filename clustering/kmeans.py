@@ -8,7 +8,6 @@ from absl.flags import argparse_flags
 import numpy as np
 from PIL import Image
 import scipy as sc
-import cv2
 from scipy.cluster.vq import kmeans, vq
 import pickle
 import zlib

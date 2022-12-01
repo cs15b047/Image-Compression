@@ -70,24 +70,24 @@ vector<uint8_t> read_ppm_image(string input_filepath) {
 
 
 int main(int argc, char* argv[]) {
-    if(argc != 3) {
-        cout << "Usage: " << argv[0] << " <input_file> <output_file>" << endl;
+    if(argc != 4) {
+        cout << "Usage: " << argv[0] << " <input_file> <compressed_file> <output_file>" << endl;
         return 1;
     }
-    string input_filepath = argv[1], output_filepath = argv[2];
+    string input_filepath = argv[1], compressed_filepath = argv[2], output_filepath = argv[3];
     cout << "Original file size: " << (file_size(argv[1]) / 1024) << " KB" << endl;
 
     if(file_type(input_filepath) == "png"){
         // Read and compress
         vector<uint8_t> image = read_png_image(input_filepath);
-        string compressed_filepath = compress_image(image, width, height, get_filename(input_filepath));
+        compress_image(image, width, height, compressed_filepath);
 
         // Decompress and write
         vector<uint8_t> restored_image = decompress_image(compressed_filepath);
         write_png_image(restored_image, compressed_filepath, output_filepath);
     } else if(file_type(input_filepath) == "ppm") {
         vector<uint8_t> image = read_ppm_image(input_filepath);
-        string compressed_filepath = compress_image(image, width, height, get_filename(input_filepath));
+        compress_image(image, width, height, compressed_filepath);
 
         // Decompress and write
         vector<uint8_t> restored_image = decompress_image(compressed_filepath);

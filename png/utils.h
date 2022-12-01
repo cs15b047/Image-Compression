@@ -2,6 +2,10 @@
 #define UTILS_H
 
 #include <vector>
+#include <stdint.h>
+#include <string>
+#include <cstring>
+#include <cassert>
 
 void calculate_roundtrip_error(std::vector<uint8_t>& image, std::vector<uint8_t>& image_restored, int image_size);
 void calc_histogram(std::vector<uint8_t>& image);
