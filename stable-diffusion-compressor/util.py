@@ -33,17 +33,19 @@ def to_img(latents):
   img = Image.fromarray(np_img)
   return img
 
-def resize_to_512(input_file, output_file):
+def resize_to_512(input_file):
   img = Image.open(input_file).convert('RGB')
+  original_size = [img.width, img.height]
   #center crop image
   maxdim = max(img.width, img.height)
   mindim = min(img.width, img.height)
   left = max(0, (img.width - img.height) // 2 - 1)
   top = max(0, (img.height - img.width) // 2 - 1)
-  img = img.crop((left, top, left + mindim - 1, top + mindim - 1))
+  # img = img.crop((left, top, left + mindim - 1, top + mindim - 1))
   #resize
   img = img.resize((512,512), Image.LANCZOS)
-  img.save(output_file, lossless = True, quality = 100)
+  # img.save(output_file, lossless = True, quality = 100)
+  return img, original_size
 
 def print_metrics(gt, img):
   gt = np.array(gt)
