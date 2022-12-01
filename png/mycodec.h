@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 #include <fftw3.h>
+#include <stdint.h>
+#include <bitset>
 
 std::string compress_image(std::vector<uint8_t>& image, int width, int height, std::string filename);
 std::vector<uint8_t> decompress_image(std::string filename);

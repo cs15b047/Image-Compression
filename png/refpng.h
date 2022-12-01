@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <vector>
 #include <png.h>
+#include <stdint.h>
 
 extern int width, height;
 extern png_byte color_type;

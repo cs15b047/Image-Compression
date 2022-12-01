@@ -1,6 +1,6 @@
 CC = g++
-FLAGS = -std=c++11 -O3
-LDLFAGS =-lpng -lz -lfftw3
+FLAGS = -std=c++11 -O3 -fpermissive -fPIC
+LDLFAGS =-lpng -lz -lfftw3 
 
 SRCS = driver.cpp refpng.cpp mycodec.cpp rle.cpp delta.cpp bucket.cpp color_transform.cpp compress.cpp dct.cpp utils.cpp
 OBJS = $(SRCS:.cpp=.o)
