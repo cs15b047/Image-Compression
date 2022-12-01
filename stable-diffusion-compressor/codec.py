@@ -13,11 +13,11 @@ torch_device = "cpu"
 # torch_device = "cuda"
 
 vae = AutoencoderKL.from_pretrained(
-    pretrained_model_name_or_path, subfolder="vae", use_auth_token=True
+    pretrained_model_name_or_path, subfolder="vae", use_auth_token=huggingface_token
 ).to(torch_device)
 
 unet = UNet2DConditionModel.from_pretrained(
-    pretrained_model_name_or_path, subfolder="unet", use_auth_token=True
+    pretrained_model_name_or_path, subfolder="unet", use_auth_token=huggingface_token
 ).to(torch_device)
 
 scheduler = PNDMScheduler(
@@ -26,13 +26,13 @@ scheduler = PNDMScheduler(
 )
 
 text_encoder = CLIPTextModel.from_pretrained(
-    pretrained_model_name_or_path, subfolder="text_encoder", use_auth_token=True,
+    pretrained_model_name_or_path, subfolder="text_encoder", use_auth_token=huggingface_token,
 )
 
 tokenizer = CLIPTokenizer.from_pretrained(
     pretrained_model_name_or_path,
     subfolder="tokenizer",
-    use_auth_token=True,
+    use_auth_token=huggingface_token,
     torch_dtype=torch.float16
 )
 
