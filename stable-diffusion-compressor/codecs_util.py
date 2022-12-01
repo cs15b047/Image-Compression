@@ -1,5 +1,7 @@
 from codec import *
 from util import *
+import zlib
+import pickle
 
 def quantize(latents):
   quantized_latents = (latents / (255 * 0.18215) + 0.5).clamp(0,1)
@@ -40,19 +42,41 @@ def denoise(latents):
     
     return latents / 0.18215
 
-def compress_input(gt_img, output_path):
-    gt_img.show()
-    print('Ground Truth')
+def save_compressed_image(latents, compressed_path):
+    latents_compressed = zlib.compress(latents.numpy().tobytes())
+    latents_shape = latents.shape
+    compressed_data = [latents_compressed, latents_shape]
+    with open(compressed_path, 'wb') as f:
+        pickle.dump(compressed_data, f)
 
+def restore_latents(compressed_path):
+    with open(compressed_path, 'rb') as f:
+        compressed_data = pickle.load(f)
+    latents_compressed, latents_shape = compressed_data
+    latents_compressed = zlib.decompress(latents_compressed)
+    latents = np.frombuffer(latents_compressed, dtype=np.float32).reshape(latents_shape)
+    latents = torch.from_numpy(latents)
+    return latents
+
+def compress_input(input_filepath, output_path):
+    gt_img, original_size = resize_to_512(input_filepath)
+    gt_original_size = gt_img.resize(original_size, Image.LANCZOS)
     print('Start Encoding...')
     # Display VAE roundtrip image
     latents = to_latents(gt_img)
+    print(latents.shape, latents.dtype)
+    compressed_path = output_path + '.z'
+    save_compressed_image(latents, compressed_path)
     print("Encoding image to latents done. Start decoding")
-    img_from_latents = to_img(latents)
+    latents_restored = restore_latents(compressed_path)
+
+    img_from_latents = to_img(latents_restored)
+    img_from_latents = img_from_latents.resize(original_size)
+    img_from_latents.save(input_filepath + '_from_latents.png')
     img_from_latents.show()
     print('Decoding complete')
     print('VAE roundtrip')
-    print_metrics(gt_img, img_from_latents)
+    print_metrics(gt_original_size, img_from_latents)
 
     # Quantize latent representation and save as lossless webp image
     print ('Start Quantization...')
