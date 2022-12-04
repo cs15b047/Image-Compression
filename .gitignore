@@ -3,3 +3,6 @@ data/
 .DS_Store
 *.bpg
 *.pdf
+uploads/
+compressed/
+*.log
