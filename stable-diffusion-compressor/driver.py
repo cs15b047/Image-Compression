@@ -12,6 +12,7 @@ import time
 if __name__ == "__main__":
     input_filepath = sys.argv[1]
     output_filepath = sys.argv[2]
+    reconstructed_filepath = sys.argv[3]
 
     if not os.path.isfile(input_filepath):
         print("Input file does not exist")
@@ -19,7 +20,7 @@ if __name__ == "__main__":
 
     print("Starting compression...")
     start_compress = time.time()
-    compress_input(input_filepath, output_filepath)
+    compress_input(input_filepath, output_filepath, reconstructed_filepath)
     time.sleep(0.1) # sleep so execution can be interrupted
     end_compress = time.time()
     print("Compression took {} seconds".format(end_compress - start_compress))

@@ -58,33 +58,32 @@ def restore_latents(compressed_path):
     latents = torch.from_numpy(latents)
     return latents
 
-def compress_input(input_filepath, output_path):
+def compress_input(input_filepath, output_path, reconstructed_filepath):
     gt_img, original_size = resize_to_512(input_filepath)
     gt_original_size = gt_img.resize(original_size, Image.LANCZOS)
     print('Start Encoding...')
     # Display VAE roundtrip image
     latents = to_latents(gt_img)
     print(latents.shape, latents.dtype)
-    compressed_path = output_path + '.z'
+    compressed_path = output_path
     save_compressed_image(latents, compressed_path)
     print("Encoding image to latents done. Start decoding")
     latents_restored = restore_latents(compressed_path)
 
     img_from_latents = to_img(latents_restored)
     img_from_latents = img_from_latents.resize(original_size)
-    img_from_latents.save(input_filepath + '_from_latents.png')
-    img_from_latents.show()
+    img_from_latents.save(reconstructed_filepath + '_from_latents.png')
     print('Decoding complete')
     print('VAE roundtrip')
     print_metrics(gt_original_size, img_from_latents)
 
     # Quantize latent representation and save as lossless webp image
-    print ('Start Quantization...')
-    quantized = quantize(latents)
-    del latents
-    quantized_img = Image.fromarray(quantized)
-    quantized_img.save(output_path + "_sd_quantized_latents.webp", lossless=True, quality=100)
-    print('Quantization complete')
+    # print ('Start Quantization...')
+    # quantized = quantize(latents)
+    # del latents
+    # quantized_img = Image.fromarray(quantized)
+    # quantized_img.save(output_path + "_sd_quantized_latents.webp", lossless=True, quality=100)
+    # print('Quantization complete')
 
     # # Display VAE decoded image from 8-bit quantized latents
     # unquantized_latents = unquantize(quantized)

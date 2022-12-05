@@ -1,0 +1,15 @@
+Image,PSNR,SSIM
+leaves_iso_200,37.60,0.9743
+nightshot_iso_1600,38.13,0.9556
+spider_web,40.09,0.9542
+flower_foveon,37.41,0.9512
+hdr,38.23,0.9469
+nightshot_iso_100,39.34,0.9666
+cathedral,38.55,0.9635
+big_tree,35.21,0.9159
+artificial,39.20,0.9791
+deer,36.82,0.9347
+fireworks,43.64,0.9924
+bridge,34.86,0.9216
+big_building,37.56,0.9523
+leaves_iso_1600,36.33,0.9653
