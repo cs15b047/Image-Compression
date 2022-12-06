@@ -30,7 +30,7 @@ from absl.flags import argparse_flags
 import numpy as np
 import tensorflow as tf
 import tensorflow_compression as tfc  # pylint:disable=unused-import
-
+from PIL import Image
 
 # Default URL to fetch metagraphs from.
 URL_PREFIX = "https://storage.googleapis.com/tensorflow_compression/metagraphs"
@@ -40,8 +40,8 @@ METAGRAPH_CACHE = "/tmp/tfc_metagraphs"
 
 def read_png(filename):
   """Loads a PNG image file."""
-  string = tf.io.read_file(filename)
-  image = tf.image.decode_image(string, channels=3)
+  image = Image.open(filename)
+  image = tf.convert_to_tensor(image)
   return tf.expand_dims(image, 0)
 
 

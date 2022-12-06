@@ -29,7 +29,7 @@ void decompress(string filename) {
 
 void compress(vector<char> buffer, string filename) {
     int size = buffer.size();
-    string compressed_filename = filename + ".z";
+    string compressed_filename = filename;
     char* outfilename = (char*)(compressed_filename).c_str();
     gzFile outfile = gzopen(outfilename, "wb");
     gzwrite(outfile, buffer.data(), size);
@@ -40,7 +40,7 @@ void compress(vector<char> buffer, string filename) {
 }
 
 vector<char> decompress1(string filename) {
-    string compressed_filename = filename + ".z";
+    string compressed_filename = filename;
     char* infilename = (char*)(compressed_filename).c_str();
     gzFile infile = gzopen(infilename, "rb");
 
