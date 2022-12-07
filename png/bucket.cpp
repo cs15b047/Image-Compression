@@ -29,28 +29,30 @@ vector<uint8_t> bucket_rgb(vector<uint8_t>& image, int width, int height, std::s
 }
 
 vector<uint8_t> bucket_ycbcr(vector<uint8_t>& image, int width, int height) {
-    vector<uint8_t> encoded_image;
+    vector<uint8_t> encoded_image(image.size());
     // Y --> remains as is, Cb and Cr --> bucketed
+    #pragma omp parallel for
     for(int i = 0; i < image.size(); i++) {
         if(i % 3 != 0) {
             uint8_t bucket_idx = image[i] / bucket_size;
-            encoded_image.push_back(bucket_idx);
+            encoded_image[i] = bucket_idx;
         } else {
-            encoded_image.push_back(image[i]);
+            encoded_image[i] = image[i];
         }
     }
     return encoded_image;
 }
 
 vector<uint8_t> restore_bucket_ycbcr(vector<uint8_t>& image) {
-    vector<uint8_t> restored_image;
+    vector<uint8_t> restored_image(image.size());
     // Y --> remains as is, Cb and Cr --> restored
+    #pragma omp parallel for
     for(int i = 0; i < image.size(); i++) {
         uint8_t restored_pixel = image[i];
         if(i % 3 != 0) {
             restored_pixel = restored_pixel * bucket_size;
         }
-        restored_image.push_back(restored_pixel);
+        restored_image[i] = restored_pixel;
     }
     return restored_image;
 }

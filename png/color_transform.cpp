@@ -4,13 +4,10 @@ using namespace std;
 
 vector<uint8_t> rgb2ycbcr(vector<uint8_t>& image) {
     vector<uint8_t> ycbcr_image;
-    double red_total = 0, green_total = 0, blue_total = 0;
-    ycbcr_image.clear();
+    ycbcr_image.resize(image.size());
+    #pragma omp parallel for
     for(int i = 0; i < image.size(); i += 3) {
         double r = image[i], g = image[i+1], b = image[i+2];
-        red_total += r;
-        green_total += g;
-        blue_total += b;
         
         double y = 0.299 * r + 0.587 * g + 0.114 * b;
         double cb = -0.169 * r - 0.331 * g + 0.5 * b + 128;
@@ -19,9 +16,9 @@ vector<uint8_t> rgb2ycbcr(vector<uint8_t>& image) {
         cb = clip(cb);
         cr = clip(cr);
 
-        ycbcr_image.push_back((uint8_t)y);
-        ycbcr_image.push_back((uint8_t)cb);
-        ycbcr_image.push_back((uint8_t)cr);
+        ycbcr_image[i] = (uint8_t)y;
+        ycbcr_image[i + 1] = (uint8_t)cb;
+        ycbcr_image[i + 2] = (uint8_t)cr;
     }
 
     return ycbcr_image;
@@ -29,7 +26,8 @@ vector<uint8_t> rgb2ycbcr(vector<uint8_t>& image) {
 
 vector<uint8_t> ycbcr2rgb(vector<uint8_t>& image) {
     vector<uint8_t> rgb_image;
-    rgb_image.clear();
+    rgb_image.resize(image.size());
+    #pragma omp parallel for
     for(int i = 0; i < image.size(); i += 3) {
         double y = (double)image[i], cb = (double)image[i+1], cr = (double)image[i+2];
         // y = (y - 16) / 219.0;
@@ -44,9 +42,9 @@ vector<uint8_t> ycbcr2rgb(vector<uint8_t>& image) {
         g = clip(g);
         b = clip(b);
 
-        rgb_image.push_back((uint8_t)r);
-        rgb_image.push_back((uint8_t)g);
-        rgb_image.push_back((uint8_t)b);
+        rgb_image[i] = (uint8_t)r;
+        rgb_image[i + 1] = (uint8_t)g;
+        rgb_image[i + 2] = (uint8_t)b;
     }
 
     return rgb_image;
