@@ -36,7 +36,7 @@ def summarize_results(method):
     compressed_images_size = 0
 
 
-    image_names, PSNR_val, SSIM_val = [], [], []
+    image_names, PSNR_val, SSIM_val, original_images_sizes, compressed_images_sizes, compression_ratios = [], [], [], [], [], []
     for i, image in tqdm(enumerate(os.listdir(original_images_dir))):
         file_ext = image.split(".")[-1]
         if file_ext != "png" and file_ext != "ppm":
@@ -54,8 +54,13 @@ def summarize_results(method):
         SSIM_val += [ssim_val]
 
         # Measure size of original image
-        original_images_size += os.path.getsize(original_image_path)
-        compressed_images_size += os.path.getsize(compressed_image_path)
+        original_image_size, compressed_image_size = os.path.getsize(original_image_path), os.path.getsize(compressed_image_path)
+        compression_ratio = original_image_size / compressed_image_size
+        original_images_sizes += [original_image_size]
+        compressed_images_sizes += [compressed_image_size]
+        compression_ratios += [compression_ratio]
+        original_images_size += original_image_size
+        compressed_images_size += compressed_image_size
 
     compression_ratio = original_images_size / compressed_images_size
     compressed_images_size = compressed_images_size / pow(2, 20) # MB
@@ -70,9 +75,9 @@ def summarize_results(method):
         f.write(f"Compression ratio: {compression_ratio:.2f}\n")
     
     with open(results_file, "w") as f:
-        f.write("Image,PSNR,SSIM\n")
+        f.write("Image,PSNR,SSIM,Original_size,Compressed_size(MB),Compression_ratio\n")
         for i in range(num_images):
-            f.write(f"{image_names[i]},{PSNR_val[i]:.2f},{SSIM_val[i]:.4f}\n")
+            f.write(f"{image_names[i]},{PSNR_val[i]:.2f},{SSIM_val[i]:.4f},{original_images_sizes[i]},{compressed_images_sizes[i]},{compression_ratios[i]}\n")
 
 if __name__ == "__main__":
     base_dir="/mnt/Image-Compression"
