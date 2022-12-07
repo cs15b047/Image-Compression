@@ -6,6 +6,7 @@
 #include <string>
 #include <cstring>
 #include <cassert>
+#include <omp.h>
 
 void calculate_roundtrip_error(std::vector<uint8_t>& image, std::vector<uint8_t>& image_restored, int image_size);
 void calc_histogram(std::vector<uint8_t>& image);

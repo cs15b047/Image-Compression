@@ -15,6 +15,7 @@ vector<vector<T>> separate_channels(vector<T>& image_, int image_size) {
     cout << "image size: " << image_size << endl;
     #endif
     
+    #pragma omp parallel for
     for (int i = 0; i < image_size; i++) {
         image[0][i] = image_[3 * i]; // isolate the 1st channel (Y in YCbCr)
         image[1][i] = image_[3 * i + 1]; // isolate the 2nd channel (Cb in YCbCr)
@@ -26,6 +27,7 @@ vector<vector<T>> separate_channels(vector<T>& image_, int image_size) {
 template <typename T>
 vector<T> merge_channels(vector<vector<T>>& image, int image_size) {
     vector<T> combined_image(3 * image_size);
+    #pragma omp parallel for
     for (int i = 0; i < image_size; i++) {
         combined_image[3 * i] = image[0][i];
         combined_image[3 * i + 1] = image[1][i];

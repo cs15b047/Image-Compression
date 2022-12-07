@@ -77,6 +77,10 @@ int main(int argc, char* argv[]) {
     string input_filepath = argv[1], compressed_filepath = argv[2], output_filepath = argv[3];
     cout << "Original file size: " << (file_size(argv[1]) / 1024) << " KB" << endl;
 
+    omp_set_num_threads(40);
+    fftw_init_threads();
+    fftw_plan_with_nthreads(omp_get_max_threads());
+
     if(file_type(input_filepath) == "png"){
         // Read and compress
         vector<uint8_t> image = read_png_image(input_filepath);
@@ -97,6 +101,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    fftw_cleanup_threads();
     
 
     return 0;
