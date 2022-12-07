@@ -8,9 +8,11 @@ using namespace std;
 
 int block_size;
 vector<double> quantization_table;
+float quality;
 
 void setup_dct_params() {
     block_size = 8;
+    quality = 100;
     quantization_table.resize(block_size * block_size);
     vector<double> Q = {
         16,11,10,16,24,40,51,61,
@@ -24,6 +26,11 @@ void setup_dct_params() {
     };
 
     quantization_table = Q;
+    float S = (quality < 50) ? (5000 / quality) : (200 - 2 * quality);
+    for(int i = 0; i < block_size * block_size; i++) {
+        double entry = floor(round((S * Q[i] + 50) / 100));
+        quantization_table[i] = max(1, (int)entry);
+    }
 }
 
 vector<float> quantize(vector<float>& block) {
