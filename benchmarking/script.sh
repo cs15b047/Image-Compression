@@ -1,4 +1,4 @@
-BASE_DIR=/mnt/Image-Compression/
+BASE_DIR=/mnt/Work/Image-Compression/
 DATA_DIR=$BASE_DIR/data
 RESULTS_DIR=$BASE_DIR/benchmarking/results
 
@@ -9,7 +9,7 @@ DIFFUSION_DIR=$BASE_DIR/stable-diffusion-compressor
 HIFIC_DIR=$BASE_DIR/hific
 
 CLIC_DATA_DIR=$DATA_DIR/clic
-C10N_DATA_DIR=$DATA_DIR/c10n_benchmark
+C10N_DATA_DIR=$DATA_DIR/imagenet-my-sample-images
 
 lossless() {
     # Run custom lossless codec on C10N benchmark dataset
@@ -26,7 +26,7 @@ lossless() {
 
 mycodec() {
     # Run custom codec on C10N benchmark dataset
-    for i in $C10N_DATA_DIR/*.ppm; do
+    for i in $C10N_DATA_DIR/*.JPEG; do
         img_name=$(basename -s .ppm $i)
         src_img_path=$i
 
@@ -40,9 +40,9 @@ mycodec() {
 
 # Run k-means clustering codec on C10N benchmark dataset
 kmeans() {
-    K=200
-    for i in $C10N_DATA_DIR/*.ppm; do
-        img_name=$(basename -s .ppm $i)
+    K=25
+    for i in $C10N_DATA_DIR/*.JPEG; do
+        img_name=$(basename -s .JPEG $i)
         src_img_path=$i
 
         compressed_img_path=$RESULTS_DIR/clustering/compressed/$img_name.z
