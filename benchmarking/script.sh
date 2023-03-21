@@ -27,8 +27,8 @@ lossless() {
 
 mycodec() {
     # Run custom codec on C10N benchmark dataset
-    for i in $C10N_DATA_DIR/*.JPEG; do
-        img_name=$(basename -s .ppm $i)
+    for i in $OBJ_DET_DATA_DIR/*.jpg; do
+        img_name=$(basename -s .jpg $i)
         src_img_path=$i
 
         compressed_img_path=$RESULTS_DIR/mycodec/compressed/$img_name.z

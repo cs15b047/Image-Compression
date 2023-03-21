@@ -2,53 +2,9 @@
 
 #include <vector>
 #include <iostream>
-#include <math.h>
+#include "quantization.h"
 
 using namespace std;
-
-int block_size;
-vector<double> quantization_table;
-float quality;
-
-void setup_dct_params() {
-    block_size = 8;
-    quality = 100;
-    quantization_table.resize(block_size * block_size);
-    vector<double> Q = {
-        16,11,10,16,24,40,51,61,
-        12,12,14,19,26,28,60,55,
-        14,13,16,24,40,57,69,56,
-        14,17,22,29,51,87,80,62,
-        18,22,37,56,68,109,103,77,
-        24,35,55,64,81,104,113,92,
-        49,64,78,87,103,121,120,101,
-        72,92,95,98,112,100,103,99
-    };
-
-    quantization_table = Q;
-    float S = (quality < 50) ? (5000 / quality) : (200 - 2 * quality);
-    for(int i = 0; i < block_size * block_size; i++) {
-        double entry = floor(round((S * Q[i] + 50) / 100));
-        quantization_table[i] = max(1, (int)entry);
-    }
-}
-
-vector<float> quantize(vector<float>& block) {
-    vector<float> quantized_block = block;
-    for(int i = 0; i < block_size * block_size; i++) {
-        quantized_block[i] = quantization_table[i] * round(quantized_block[i] / quantization_table[i]);
-    }
-    return quantized_block;
-}
-
-vector<float> reverse_quantize(vector<float>& block) {
-    vector<float> quantized_block;
-    quantized_block.resize(block_size * block_size);
-    for(int i = 0; i < block_size * block_size; i++) {
-        quantized_block[i] = block[i] * quantization_table[i];
-    }
-    return quantized_block;
-}
 
 vector<float> dct2D(fftw_plan& dct2d, vector<uint8_t>& image, int width, int height) {
     int image_size = width * height;
@@ -112,7 +68,7 @@ vector<float> apply_dct(vector<uint8_t>& image_, int width, int height) {
 
                 // Quantize DCT
                 if(ch == 0) {
-                    block_dct = quantize(block_dct);
+                    block_dct = quantize(block_dct, (float)i / height, (float)j / width);
                     #ifdef debug
                     for(auto& x: block_dct) {
                         if(x != 0) non_zero++;

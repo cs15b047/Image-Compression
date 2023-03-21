@@ -2,7 +2,7 @@ CC = g++
 FLAGS = -std=c++11 -O3 -fpermissive -fPIC -fopenmp
 LDLFAGS =-lpng -lz -lfftw3 -lfftw3_omp -ljpeg
 
-SRCS_COMMON = refpng.cpp rle.cpp delta.cpp bucket.cpp color_transform.cpp compress.cpp dct.cpp utils.cpp
+SRCS_COMMON = refpng.cpp rle.cpp delta.cpp bucket.cpp color_transform.cpp compress.cpp dct.cpp utils.cpp quantization.cpp
 SRCS_JPEG = mycodec.cpp driver.cpp
 SRCS_PNG = lossless.cpp driver_lossless.cpp
 
