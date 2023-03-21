@@ -26,7 +26,7 @@ def evaluate_compression_quality(original_image_path, compressed_image_path):
 
 
 def summarize_results(method):
-    original_images_dir = os.path.join(base_dir, "data/c10n_benchmark")
+    original_images_dir = os.path.join(base_dir, "data/obj-detection-sample-images")
     compressed_images_dir = os.path.join(base_dir, "benchmarking/results", method, "compressed")
     reconstructed_images_dir = os.path.join(base_dir, "benchmarking/results", method, "reconstructed")
     metrics_file = os.path.join(base_dir, "benchmarking/results", method, "metrics.txt")
@@ -39,7 +39,7 @@ def summarize_results(method):
     image_names, PSNR_val, SSIM_val, original_images_sizes, compressed_images_sizes, compression_ratios = [], [], [], [], [], []
     for i, image in tqdm(enumerate(os.listdir(original_images_dir))):
         file_ext = image.split(".")[-1]
-        if file_ext != "png" and file_ext != "ppm":
+        if file_ext != "png" and file_ext != "ppm" and file_ext != "jpg":
             continue
 
         image_name = image.split(".")[0]
@@ -80,9 +80,9 @@ def summarize_results(method):
             f.write(f"{image_names[i]},{PSNR_val[i]:.2f},{SSIM_val[i]:.4f},{original_images_sizes[i]},{compressed_images_sizes[i]},{compression_ratios[i]}\n")
 
 if __name__ == "__main__":
-    base_dir="/mnt/Image-Compression"
+    base_dir="/mnt/Work/Image-Compression"
 
-    codecs = ["lossless", "mycodec", "clustering", "hific", "stable_diffusion"]
+    codecs = ["clustering"] # ["lossless", "mycodec", "clustering", "hific", "stable_diffusion"]
     for codec in codecs:
         print(f"Summarizing results for {codec}")
         summarize_results(codec)

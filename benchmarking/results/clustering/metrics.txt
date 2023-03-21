@@ -1,4 +1,4 @@
-PSNR: 38.07 +/- 2.11
-SSIM: 0.9553 +/- 0.0204
-Compressed images size: 94.14 MB
-Compression ratio: 4.77
+PSNR: 33.34 +/- 2.05
+SSIM: 0.9200 +/- 0.0405
+Compressed images size: 1.27 MB
+Compression ratio: 1.56

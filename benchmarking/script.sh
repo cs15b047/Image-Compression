@@ -10,6 +10,7 @@ HIFIC_DIR=$BASE_DIR/hific
 
 CLIC_DATA_DIR=$DATA_DIR/clic
 C10N_DATA_DIR=$DATA_DIR/imagenet-my-sample-images
+OBJ_DET_DATA_DIR=$DATA_DIR/obj-detection-sample-images
 
 lossless() {
     # Run custom lossless codec on C10N benchmark dataset
@@ -41,8 +42,8 @@ mycodec() {
 # Run k-means clustering codec on C10N benchmark dataset
 kmeans() {
     K=25
-    for i in $C10N_DATA_DIR/*.JPEG; do
-        img_name=$(basename -s .JPEG $i)
+    for i in $OBJ_DET_DATA_DIR/*.jpg; do
+        img_name=$(basename -s .jpg $i)
         src_img_path=$i
 
         compressed_img_path=$RESULTS_DIR/clustering/compressed/$img_name.z
