@@ -82,7 +82,7 @@ def summarize_results(method):
 if __name__ == "__main__":
     base_dir="/mnt/Work/Image-Compression"
 
-    codecs = ["clustering"] # ["lossless", "mycodec", "clustering", "hific", "stable_diffusion"]
+    codecs = ["mycodec"] # ["lossless", "mycodec", "clustering", "hific", "stable_diffusion"]
     for codec in codecs:
         print(f"Summarizing results for {codec}")
         summarize_results(codec)

@@ -2,7 +2,7 @@ import torch
 import os
 
 # Model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5m, yolov5l, yolov5x, custom
+model = torch.hub.load('ultralytics/yolov5', 'yolov5m')  # or yolov5m, yolov5l, yolov5x, custom
 
 base_dir1 = "/mnt/Work/Image-Compression/data/obj-detection-sample-images"
 base_dir2 = "/mnt/Work/Image-Compression/benchmarking/results/clustering/reconstructed"
@@ -12,6 +12,7 @@ base_dir2 = "/mnt/Work/Image-Compression/benchmarking/results/clustering/reconst
 for (img_path1, img_path2) in zip(sorted(os.listdir(base_dir1)), sorted(os.listdir(base_dir2))):
     img1 = os.path.join(base_dir1, img_path1)
     img2 = os.path.join(base_dir2, img_path2)
+    print(img_path1, img_path2)
     results = model(img1)
     results.print()
     print("----------------------------------------")
