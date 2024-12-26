@@ -2,7 +2,6 @@
 ## Run codec
 python3 driver.py [path of image to be compressed] compressed/[name of compressed image file]
 
-<!-- edit1 -->
 # HiFiC paper - part of Tensorflow compression
 ## Run codec
 python3 tfci.py [mode = compress/decompress] [model=hific-lo/hific-hi]
@@ -17,6 +16,7 @@ python3 kmeans.py [path of image to be compressed] compressed/[name of compresse
 
 # Classical algorithms - JPEG/PNG
 ## Build codec
+<!-- edit 4 -->
 Compile: make all
 Remove all executables: make clean
 ## Run codec
