@@ -11,10 +11,17 @@ Decode: python3 tfci.py decompress ../data/image_compression_benchmark/big_build
 # K-means clustering-based codec
 ## Run codec
 python3 kmeans.py [path of image to be compressed] compressed/[name of compressed image file] reconstructed/[name of decoded image file] [number of clusters]
+<!-- edit2 -->
+
 
 # Classical algorithms - JPEG/PNG
 ## Build codec
+<!-- edit 4 -->
 Compile: make all
 Remove all executables: make clean
 ## Run codec
 ./mycodec [path of image to be compressed] compressed/[name of compressed image file] reconstructed/[name of decoded image file]
+
+
+<!-- This is -->
+ <!-- edit 3 -->
